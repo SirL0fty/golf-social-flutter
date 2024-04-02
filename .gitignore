@@ -41,3 +41,20 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Firebase related
+firebase-*.json
+google-services.json
+lib/firebase_options.dart
+
+# Additional Firebase and sensitive files
+**/ios/Runner.xcworkspace/xcuserdata/
+**/ios/Runner.xcworkspace/xcshareddata/
+**/ios/Runner.xcodeproj/xcuserdata/
+**/ios/Runner.xcodeproj/project.xcworkspace/
+**/ios/Pods/
+**/android/.gradle/
+**/android/app/build/
+**/android/app/.gradle/
+**/android/.idea/
+**/GoogleService-Info.plist
