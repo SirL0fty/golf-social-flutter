@@ -4,6 +4,7 @@ import 'package:golf_social/components/my_button.dart';
 import 'package:golf_social/components/my_textfield.dart';
 import 'package:golf_social/components/constants.dart';
 import 'package:golf_social/components/socialmedia_button.dart';
+import 'package:logging/logging.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -13,20 +14,24 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final _logger = Logger('LoginPage');
   String errorMessage = '';
 
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
-  void signUserIn() async {
-    // Show the loading dialog
-    showDialog(
-      context: context,
-      builder: (context) {
-        return const Center(
-          child: CircularProgressIndicator(color: primaryLimeGreen),
-        );
-      },
+  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
+  Future<void> signUserIn() async {
+    navigatorKey.currentState?.push(
+      MaterialPageRoute(
+        builder: (BuildContext context) {
+          return const Center(
+            child: CircularProgressIndicator(color: primaryLimeGreen),
+          );
+        },
+        fullscreenDialog: true,
+      ),
     );
 
     try {
@@ -36,11 +41,12 @@ class _LoginPageState extends State<LoginPage> {
       );
 
       // Dismiss the loading dialog on successful sign-in
-      Navigator.pop(context);
+      navigatorKey.currentState?.pop();
     } on FirebaseAuthException catch (e) {
-      print('FirebaseAuthException caught: ${e.code}');
+      _logger.severe('FirebaseAuthException caught: ${e.code}');
+
       // Dismiss the loading dialog on error
-      Navigator.pop(context);
+      navigatorKey.currentState?.pop();
       if (e.code == 'user-not-found') {
         userNotFoundMessage();
       } else if (e.code == 'wrong-password') {
