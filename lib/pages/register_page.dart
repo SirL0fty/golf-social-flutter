@@ -7,24 +7,25 @@ import 'package:golf_social/components/socialmedia_button.dart';
 import 'package:golf_social/services/auth_service.dart';
 import 'package:logging/logging.dart';
 
-class LoginPage extends StatefulWidget {
+class RegisterPage extends StatefulWidget {
   final void Function() onTap;
-  const LoginPage({super.key, required this.onTap});
+  const RegisterPage({super.key, required this.onTap});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
-  final _logger = Logger('LoginPage');
+class _RegisterPageState extends State<RegisterPage> {
+  final _logger = Logger('RegisterPage');
   String errorMessage = '';
 
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
 
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
-  Future<void> signUserIn() async {
+  Future<void> signUserUp() async {
     navigatorKey.currentState?.push(
       MaterialPageRoute(
         builder: (BuildContext context) {
@@ -37,10 +38,17 @@ class _LoginPageState extends State<LoginPage> {
     );
 
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: emailController.text,
-        password: passwordController.text,
-      );
+      // Check if password matches
+      if (passwordController.text != confirmPasswordController.text) {
+        // show error message
+        showErrorMessage('Password Mismatch',
+            'The passwords you entered do not match. Please try again.');
+      } else {
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: emailController.text,
+          password: passwordController.text,
+        );
+      }
 
       // Dismiss the loading dialog on successful sign-in
       navigatorKey.currentState?.pop();
@@ -111,11 +119,11 @@ class _LoginPageState extends State<LoginPage> {
 
               // welcome back text
               const Text(
-                'Welcome back we\'ve missed you!',
+                'Register your new account!',
                 style: TextStyle(color: primaryLimeGreen, fontSize: 16),
               ),
 
-              const SizedBox(height: 25),
+              const SizedBox(height: 20),
 
               // username text field
               MyTextField(
@@ -123,36 +131,30 @@ class _LoginPageState extends State<LoginPage> {
                 hintText: 'Email Address',
                 obscureText: false,
               ),
-              const SizedBox(height: 25), //SHOW ERROR TEXT HERE IN RED
+              const SizedBox(height: 20),
               //password text field
               MyTextField(
                 controller: passwordController,
                 hintText: 'Password',
                 obscureText: true,
               ),
-
-              const SizedBox(height: 15),
-
-              //forgot password text
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 25.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Text('Forgot Password?',
-                        style: TextStyle(color: primaryLimeGreen)),
-                  ],
-                ),
+              const SizedBox(height: 20),
+              //confirm password text field
+              MyTextField(
+                controller: confirmPasswordController,
+                hintText: 'Confirm Password',
+                obscureText: true,
               ),
-              const SizedBox(height: 25),
+
+              const SizedBox(height: 20),
 
               //sign in button
               MyButton(
-                onTap: signUserIn,
-                text: 'Sign In',
+                onTap: signUserUp,
+                text: 'Create new account',
               ),
 
-              const SizedBox(height: 25),
+              const SizedBox(height: 20),
 
               // continue with
               const Padding(
@@ -180,7 +182,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
 
-              const SizedBox(height: 25),
+              const SizedBox(height: 20),
 
               // social media buttons
               Padding(
@@ -205,12 +207,12 @@ class _LoginPageState extends State<LoginPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text('Not a member? ',
+                  const Text('Already have an account? ',
                       style: TextStyle(color: primaryLimeGreen)),
                   const SizedBox(width: 4),
                   GestureDetector(
                     onTap: widget.onTap,
-                    child: const Text('Register Now',
+                    child: const Text('Login Now',
                         style: TextStyle(
                             color: primaryLimeGreen,
                             fontWeight: FontWeight.bold)),
