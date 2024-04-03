@@ -58,3 +58,4 @@ lib/firebase_options.dart
 **/android/app/.gradle/
 **/android/.idea/
 **/GoogleService-Info.plist
+ios/Runner/Info.plist
