@@ -4,6 +4,8 @@ import 'package:golf_social/components/my_button.dart';
 import 'package:golf_social/components/my_textfield.dart';
 import 'package:golf_social/components/constants.dart';
 import 'package:golf_social/components/socialmedia_button.dart';
+import 'package:golf_social/components/custom_text_button.dart';
+import 'package:golf_social/pages/login_page.dart';
 import 'package:golf_social/services/auth_service.dart';
 import 'package:logging/logging.dart';
 
@@ -218,13 +220,19 @@ class _RegisterPageState extends State<RegisterPage> {
                   const Text('Already have an account? ',
                       style: TextStyle(color: primaryLimeGreen)),
                   const SizedBox(width: 4),
-                  GestureDetector(
-                    onTap: widget.onTap,
-                    child: const Text('Login Now',
-                        style: TextStyle(
-                            color: primaryLimeGreen,
-                            fontWeight: FontWeight.bold)),
-                  ),
+                  CustomTextButton(
+                      text: 'Login Now',
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => LoginPage(
+                              onTap: () {},
+                            ),
+                          ),
+                        );
+                      },
+                      color: primaryLimeGreen,
+                      style: const TextStyle(fontWeight: FontWeight.bold)),
                 ],
               )
             ],

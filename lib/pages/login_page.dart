@@ -4,8 +4,11 @@ import 'package:golf_social/components/my_button.dart';
 import 'package:golf_social/components/my_textfield.dart';
 import 'package:golf_social/components/constants.dart';
 import 'package:golf_social/components/socialmedia_button.dart';
+import 'package:golf_social/components/custom_text_button.dart';
 import 'package:golf_social/services/auth_service.dart';
 import 'package:logging/logging.dart';
+import 'package:golf_social/pages/forgot_password_page.dart';
+import 'package:golf_social/pages/register_page.dart';
 
 class LoginPage extends StatefulWidget {
   final void Function() onTap;
@@ -41,14 +44,11 @@ class _LoginPageState extends State<LoginPage> {
         email: emailController.text,
         password: passwordController.text,
       );
-
-      // Dismiss the loading dialog on successful sign-in
-      navigatorKey.currentState?.pop();
+      _logger.info('User logged in successfully');
+      navigatorKey.currentState
+          ?.pop(); // Dismiss the loading dialog on successful sign-in
     } on FirebaseAuthException catch (e) {
-      _logger.severe('FirebaseAuthException caught: ${e.code}');
-
-      // Dismiss the loading dialog on error
-      navigatorKey.currentState?.pop();
+      navigatorKey.currentState?.pop(); // Dismiss the loading dialog on error
       if (e.code == 'user-not-found') {
         showErrorMessage('User Not Found',
             'No user found for the provided email. Please check the email or register a new account.');
@@ -62,10 +62,12 @@ class _LoginPageState extends State<LoginPage> {
         showErrorMessage('Authentication Failed',
             'Sorry, your email or password is incorrect. Please try again.');
       }
+    } catch (e) {
+      navigatorKey.currentState?.pop(); // Dismiss the loading dialog on error
+      _logger.info('An unexpected error occurred: $e');
     }
   }
 
-  // show error message to user
   // show error message to user
   void showErrorMessage(String title, String message) {
     showDialog(
@@ -134,13 +136,29 @@ class _LoginPageState extends State<LoginPage> {
               const SizedBox(height: 15),
 
               //forgot password text
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 25.0),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Text('Forgot Password?',
-                        style: TextStyle(color: primaryLimeGreen)),
+                    CustomTextButton(
+                      text: 'Forgot Password?',
+                      onTap: () async {
+                        final result = await Navigator.of(context).push<String>(
+                          MaterialPageRoute(
+                            builder: (context) => ForgotPasswordPage(
+                              email: emailController.text,
+                            ),
+                          ),
+                        );
+
+                        if (result != null) {
+                          emailController.text = result;
+                        }
+                      },
+                      color: primaryLimeGreen,
+                      style: const TextStyle(),
+                    )
                   ],
                 ),
               ),
@@ -203,13 +221,19 @@ class _LoginPageState extends State<LoginPage> {
                   const Text('Not a member? ',
                       style: TextStyle(color: primaryLimeGreen)),
                   const SizedBox(width: 4),
-                  GestureDetector(
-                    onTap: widget.onTap,
-                    child: const Text('Register Now',
-                        style: TextStyle(
-                            color: primaryLimeGreen,
-                            fontWeight: FontWeight.bold)),
-                  ),
+                  CustomTextButton(
+                      text: 'Register Now',
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => RegisterPage(
+                              onTap: () {},
+                            ),
+                          ),
+                        );
+                      },
+                      color: primaryLimeGreen,
+                      style: const TextStyle(fontWeight: FontWeight.bold)),
                 ],
               )
             ],

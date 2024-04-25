@@ -27,19 +27,44 @@ class HomePage extends StatelessWidget {
         ],
       ),
       body: Center(
-          child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            'LOGGED IN AS: ${user.email!}',
-            style: const TextStyle(fontSize: 20),
-          ),
-          Text(
-            'NAME: ${user.displayName ?? 'No name provided'}',
-            style: const TextStyle(fontSize: 20),
-          ),
-        ],
-      )),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: primaryGrey,
+                  width: 6,
+                ),
+              ),
+              child: CircleAvatar(
+                backgroundColor: primaryLimeGreen,
+                backgroundImage:
+                    user.photoURL != null ? NetworkImage(user.photoURL!) : null,
+                radius: 60,
+                child: user.photoURL == null
+                    ? const Icon(
+                        Icons.account_circle,
+                        size: 120,
+                        color: primaryGrey,
+                      )
+                    : null,
+              ),
+            ),
+            const SizedBox(height: 15),
+            Text(
+              'LOGGED IN AS: ${user.email!}',
+              style: const TextStyle(fontSize: 20),
+            ),
+            const SizedBox(height: 15),
+            Text(
+              'NAME: ${user.displayName ?? 'No name provided'}',
+              style: const TextStyle(fontSize: 20),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
