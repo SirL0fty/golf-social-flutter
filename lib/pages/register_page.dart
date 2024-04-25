@@ -19,6 +19,7 @@ class _RegisterPageState extends State<RegisterPage> {
   final _logger = Logger('RegisterPage');
   String errorMessage = '';
 
+  final fullNameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
@@ -44,10 +45,14 @@ class _RegisterPageState extends State<RegisterPage> {
         showErrorMessage('Password Mismatch',
             'The passwords you entered do not match. Please try again.');
       } else {
-        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        UserCredential userCredential =
+            await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: emailController.text,
           password: passwordController.text,
         );
+
+        // Update the user profile with the full name
+        await userCredential.user?.updateDisplayName(fullNameController.text);
       }
 
       // Dismiss the loading dialog on successful sign-in
@@ -125,7 +130,15 @@ class _RegisterPageState extends State<RegisterPage> {
 
               const SizedBox(height: 20),
 
-              // username text field
+              // full name text field
+              MyTextField(
+                controller: fullNameController,
+                hintText: 'Full Name',
+                obscureText: false,
+              ),
+              const SizedBox(height: 20),
+
+              // email address text field
               MyTextField(
                 controller: emailController,
                 hintText: 'Email Address',
@@ -193,11 +206,6 @@ class _RegisterPageState extends State<RegisterPage> {
                           onTap: () => AuthService().signInWithGoogle(),
                           imagePath: 'lib/images/Google.jpg'),
                       const SizedBox(height: 10),
-                      SocialMediaButton(
-                          onTap: () {}, imagePath: 'lib/images/Facebook.jpg'),
-                      const SizedBox(height: 10),
-                      SocialMediaButton(
-                          onTap: () {}, imagePath: 'lib/images/Apple.jpg'),
                     ],
                   )),
 

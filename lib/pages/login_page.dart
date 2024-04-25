@@ -191,11 +191,6 @@ class _LoginPageState extends State<LoginPage> {
                           onTap: () => AuthService().signInWithGoogle(),
                           imagePath: 'lib/images/Google.jpg'),
                       const SizedBox(height: 10),
-                      SocialMediaButton(
-                          onTap: () {}, imagePath: 'lib/images/Facebook.jpg'),
-                      const SizedBox(height: 10),
-                      SocialMediaButton(
-                          onTap: () {}, imagePath: 'lib/images/Apple.jpg'),
                     ],
                   )),
 
