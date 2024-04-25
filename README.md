@@ -39,4 +39,4 @@ To contribute to Golf Social, follow these steps:
 
 ## Contact
 
-If you want to contact me you can reach me at `<connect@mikecrane.dev>`.
+If you want to contact me you can reach me at `<connect@mikecrane.dev>`. (Coming Soon)
