@@ -25,7 +25,7 @@ class MyButton extends StatelessWidget {
             style: const TextStyle(
               color: primaryGrey,
               fontWeight: FontWeight.bold,
-              fontSize: 16,
+              fontSize: 18,
             ),
           ),
         ),
